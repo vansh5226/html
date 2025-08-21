@@ -1,0 +1,778 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Maximum Life Cover — Eligibility</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    /* Brand + pro theme */
+    --bg-1:#fff7f2; --bg-2:#fff2ea;
+    --accent-1:#ff6a3d; --accent-2:#ff9469;
+    --deep:#0f1724; --muted:#5b6470;
+    --glass:rgba(255,255,255,0.82);
+    --card-shadow:0 20px 50px rgba(16,24,40,0.10);
+    --glass-border:rgba(255,255,255,0.6);
+    --success:#0e7a4b; --danger:#b22222;
+
+    /* Premium vibes */
+    --neon:rgba(255,106,61,.45);
+    --dark-cta-1:#111827; --dark-cta-2:#1f2937;
+    --soft-line:#e7edf3;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; padding:0; font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    color:var(--deep);
+    background:
+      radial-gradient(900px 360px at -5% -10%, #fff8f5 0%, transparent 35%),
+      radial-gradient(800px 400px at 105% 10%, #fff3ec 0%, transparent 40%),
+      linear-gradient(180deg,#ffffff 0%, #fbfbff 60%);
+    -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+  }
+
+  /* Top banner + sticky heading */
+  .top-banner{ text-align:center; background:white; padding:10px }
+  .top-banner img{ max-width:300px; height:auto }
+  .heading-bar{
+    position:sticky; top:0; z-index:5;
+    background:linear-gradient(90deg,var(--accent-1),var(--accent-2));
+    color:#fff; padding:14px; text-align:center; font-size:20px; font-weight:900;
+    box-shadow:0 12px 26px rgba(255,110,70,0.25)
+  }
+  .heading-bar .sub{font-size:14px; font-weight:600; opacity:.95}
+
+  /* Layout + cards */
+  .container{max-width:1200px;margin:24px auto;padding:0 20px}
+  .grid{display:grid;grid-template-columns:1.2fr .8fr;gap:22px}
+  @media (max-width:980px){.grid{grid-template-columns:1fr}}
+  .card{
+    border-radius:20px; padding:26px;
+    background:linear-gradient(180deg, var(--glass), rgba(255,255,255,0.72));
+    border:1px solid var(--glass-border); box-shadow:var(--card-shadow);
+    transition:transform .18s, box-shadow .18s
+  }
+  .card:hover{ transform: translateY(-3px); box-shadow: 0 30px 70px rgba(16,24,40,0.16) }
+  .title{font-weight:800;margin:0 0 12px;font-size:18px}
+
+  /* Inputs */
+  label{display:block;font-size:13px;color:var(--muted);margin:8px 0 6px}
+  .field{position:relative;margin-bottom:10px}
+  .field input,.field select{
+    width:100%;padding:16px 18px 16px 52px;border-radius:14px;border:1px solid #e9eef5;background:#fff;font-size:16px;
+    box-shadow:0 6px 18px rgba(16,24,40,0.04); transition:box-shadow .14s, transform .12s, border-color .12s
+  }
+  .field input:focus,.field select:focus{outline:none;border-color:rgba(255,110,70,0.9);box-shadow:0 10px 30px rgba(255,110,70,0.06);transform:translateY(-1px)}
+  .icon{position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:18px;opacity:.85}
+  .seg{display:flex;gap:12px;margin-top:2px}
+  .seg button{
+    flex:1;padding:12px;border-radius:12px;border:1px solid #eef3f9;background:#fff;cursor:pointer;font-weight:800;font-size:15px;
+    transition:all .14s; box-shadow:0 8px 22px rgba(16,24,40,0.04)
+  }
+  .seg button.active{background:linear-gradient(90deg,#fff6f2,#fff2ee);border-color:rgba(255,150,110,0.4);color:var(--accent-1)}
+  .seg button:hover{transform:translateY(-3px)}
+  .muted{color:var(--muted);font-size:13px}
+  .box{margin-top:12px;border-radius:14px;padding:14px;background:linear-gradient(180deg,#fbfdff,#f4f7fb);border:1px dashed #e2eaf2}
+  .chips{display:flex;flex-wrap:wrap;gap:14px;margin-top:14px}
+  .chip{min-width:190px;background:#fff;border:1px solid #eef5fb;padding:14px;border-radius:12px;box-shadow:0 8px 22px rgba(0,0,0,0.03)}
+  .chip .k{font-size:13px;color:var(--muted)} .chip .v{font-weight:900;margin-top:6px;font-size:18px}
+  
+  /* New input preview styles */
+  .input-preview {
+    font-size: 14px;
+    color: var(--muted);
+    font-weight: 600;
+    margin-top: 8px;
+    text-align: right;
+  }
+
+  /* Result header (logo strip after eligibility) */
+  .result-head{
+    display:none; /* hidden until eligibility computed */
+    align-items:center; justify-content:space-between;
+    padding:10px 14px; margin:0 0 12px 0;
+    border-radius:14px;
+    background:linear-gradient(180deg,#ffffff, #f7fafc);
+    border:1px solid var(--soft-line);
+    box-shadow:0 6px 18px rgba(16,24,40,.08), 0 0 0 3px rgba(255,106,61,.06) inset;
+  }
+  .result-head .label{font-weight:900;color:#334155}
+  .result-head img{height:42px; width:auto; display:block; filter:drop-shadow(0 4px 10px rgba(0,0,0,.12))}
+  @media (max-width:780px){.result-head{flex-direction:column;gap:8px}}
+
+  /* Compact + premium plan cards */
+  .result-wrap{display:flex;flex-direction:column;gap:12px}
+  .plan-card{
+    background:linear-gradient(180deg,#ffffff,#f8fafc); border:1px solid #e7edf3;
+    padding:14px;border-radius:14px; box-shadow:0 8px 20px rgba(0,0,0,0.07);
+    transition: transform .18s ease, box-shadow .18s ease; cursor:pointer;
+  }
+  .plan-card:hover{ transform: translateY(-4px); box-shadow:0 14px 28px rgba(16,24,40,.12) }
+  .plan-head{display:flex;align-items:center;gap:12px;border-bottom:1px solid #eef2f6;padding-bottom:8px;margin-bottom:10px}
+  .plan-head img{height:46px;flex-shrink:0;border-radius:8px;transition:transform .25s ease;transform-origin:center}
+  .plan-card:hover .plan-head img{transform:scale(1.03)}
+  .plan-amount{font-size:18px;font-weight:900;color:var(--success)} .plan-sub{font-size:12px;color:#888;margin-top:2px}
+
+  /* Professional CTAs — ONLY 2 buttons, no animation */
+  .cta{display:inline-block;padding:10px 14px;border-radius:12px;color:#fff;font-weight:900;text-decoration:none;box-shadow:0 10px 24px rgba(0,0,0,.08);transition:filter .18s, transform .18s}
+  .cta:hover{filter:saturate(1.05) brightness(1.02);transform:translateY(-1px)}
+  .btn-quote{background:linear-gradient(90deg,var(--accent-1),var(--accent-2))}
+  .btn-download{background:linear-gradient(90deg,#111827,#374151)}
+  .btn-download-small{background:#6b7280; font-size:12px; padding:8px 12px; margin-left:10px; border-radius:8px;}
+
+  /* Info + error badge */
+  .badge-bad{background:#fff4f4;border:1px solid #ffd6d6;color:var(--danger);padding:14px;border-radius:14px;font-weight:900;text-align:center;font-size:16px}
+
+  /* BMI banner */
+  .bmi-banner{
+    margin-top:18px;border-radius:16px;padding:18px;display:flex;align-items:center;gap:16px;
+    background:linear-gradient(90deg,#ff7a3d,#ff5e9a);color:#fff;font-weight:800;font-size:18px;
+    box-shadow:0 12px 40px rgba(255,120,90,.12);border:1px solid rgba(255,255,255,.14)
+  }
+  .bmi-banner svg{width:56px;height:56px;flex:0 0 56px}
+  .bmi-banner .desc{font-size:15px;opacity:.95}
+  .bmi-banner a{color:#fff;text-decoration:underline;font-weight:900;margin-left:6px}
+
+  /* Responsive trims */
+  @media (max-width:780px){
+    .card{padding:18px}
+    .bmi-banner{flex-direction:column;align-items:flex-start}
+    .plan-head img{height:40px}
+  }
+
+  /* New section styles for term plan example */
+  .term-plan-example {
+    margin-top: 24px;
+  }
+  .term-plan-example .title {
+    text-align: center;
+    font-size: 22px;
+  }
+  .term-plan-example .subtitle {
+    text-align: center;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+  .term-plan-example img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 20px;
+    box-shadow: var(--card-shadow);
+  }
+
+  /* Modal */
+  .modal-backdrop{
+    position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:flex;justify-content:center;align-items:center;z-index:99;
+    padding:16px;
+  }
+  .modal{
+    background:#fff;border-radius:20px;padding:24px;width:100%;max-width:600px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.1);
+    animation:fadeInUp .2s ease-in-out;
+  }
+  .modal h2{margin-top:0;font-size:24px;font-weight:900;color:var(--accent-1)}
+  .modal ul{margin:0;padding:0;list-style-type:none}
+  .modal ul li{font-size:15px;color:var(--deep);line-height:1.6;margin-bottom:8px;position:relative;padding-left:24px}
+  .modal ul li:before{content:'\2022';position:absolute;left:0;color:var(--accent-1);font-size:22px;top:-4px}
+  .modal .close-btn{float:right;background:none;border:none;font-size:24px;cursor:pointer;opacity:.6}
+  @keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+  <div class="top-banner">
+    <img src="logo.jpg" alt="ICICI Prudential Life Insurance Logo">
+  </div>
+
+  <div class="heading-bar">
+    Maximum Life Cover — Eligibility
+    <div class="sub">Check your life cover eligibility instantly</div>
+  </div>
+
+  <div class="container">
+    <div class="grid">
+
+      <div class="card">
+        <div class="title">Applicant details</div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div class="field">
+            <label>Full name</label>
+            <span class="icon">👤</span>
+            <input id="name" type="text" placeholder="e.g. Rahul Sharma" autocomplete="name">
+          </div>
+
+          <div class="field">
+            <label>Date of birth</label>
+            <span class="icon">📅</span>
+            <input id="dob" type="date">
+            <div style="margin-top:10px;display:flex;gap:10px;align-items:center">
+              <div class="muted">or enter age</div>
+              <input id="ageManual" type="number" min="0" placeholder="Years" style="width:140px;padding:12px;border-radius:12px;border:1px solid #eef3f9">
+            </div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px">
+          <div>
+            <label>Employment type</label>
+            <div class="seg" style="margin-top:6px">
+              <button id="btnSalaried" class="active" type="button">Salaried</button>
+              <button id="btnSelf" type="button">Self-employed</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Smoker</label>
+            <span class="icon">🚬</span>
+            <select id="smoker"><option>No</option><option>Yes</option></select>
+          </div>
+        </div>
+
+        <div class="field" style="margin-top:10px">
+          <label>Education level</label>
+          <span class="icon">🎓</span>
+          <select id="education">
+            <option value="">Select</option>
+            <option>Post Graduate</option>
+            <option>Graduate</option>
+            <option>Diploma (10th+2/3yr)</option>
+            <option>Diploma (12th+2yr)</option>
+            <option>Diploma (12th+3/4yr)</option>
+            <option>12th (HSC)Passed</option>
+            <option>10th</option>
+            <option>Below 10th</option>
+          </select>
+        </div>
+
+        <div id="salariedBlock" class="box" style="margin-top:14px">
+          <div class="field">
+            <label style="font-weight:800">Annual Income (₹)</label>
+            <span class="icon">₹</span>
+            <input id="annualIncome" type="number" min="0" placeholder="e.g. 750000" style="font-size:18px;padding:14px">
+          </div>
+          <div id="annualIncomePreview" class="input-preview"></div>
+        </div>
+
+        <div id="selfBlock" class="box" style="display:none;margin-top:14px">
+          <label style="font-weight:800">Self-employed — Net Annual Income (last 3 years)</label>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px">
+            <input id="se1" type="number" min="0" placeholder="Year 1 (₹)" style="padding:12px;border-radius:10px">
+            <input id="se2" type="number" min="0" placeholder="Year 2 (₹)" style="padding:12px;border-radius:10px">
+          </div>
+          <input id="se3" type="number" min="0" placeholder="Year 3 (₹)" style="margin-top:10px;padding:12px;border-radius:10px">
+          <div class="muted" style="margin-top:10px">Average income: <strong id="seAvg">₹ 0</strong></div>
+        </div>
+
+        <div class="box" style="margin-top:14px">
+          <div class="field">
+            <label style="font-weight:800">Existing Life Insurance Cover (₹)</label>
+            <input id="existing" type="number" min="0" placeholder="e.g. 2000000" style="font-size:16px;padding:12px">
+          </div>
+          <div id="existingPreview" class="input-preview"></div>
+        </div>
+
+        <div class="chips">
+          <div class="chip"><div class="k">Age (calculated)</div><div id="ageOut" class="v">-</div></div>
+          <div class="chip"><div class="k">Income multiple (by age)</div><div id="multOut" class="v">-</div></div>
+          <div class="chip"><div class="k">Effective income</div><div id="effOut" class="v">₹ 0</div></div>
+        </div>
+
+        <div style="margin-top:18px;display:flex;gap:12px;align-items:center">
+          <a id="checkBtn" class="cta btn-quote" href="#" role="button">Calculate Eligibility</a>
+          <div style="flex:1" class="muted">Results appear on the right (no popup).</div>
+        </div>
+
+        <a href="https://www.iciciprulife.com/tools-and-calculators/bmi-calculator.html" target="_blank" class="bmi-banner" title="Check your BMI" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect x="1" y="2" width="22" height="20" rx="5" fill="rgba(255,255,255,0.12)"></rect>
+            <path d="M7 9.5c0-1.657 1.343-3 3-3s3 1.343 3 3" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M5 18s2-3 6-3 6 3 6 3" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div>
+            <div style="font-size:19px;font-weight:900">Want to check your BMI?</div>
+            <div class="desc">Open the official ICICI Prudential BMI calculator → <span style="text-decoration:underline;font-weight:900">Open BMI Calculator</span></div>
+          </div>
+        </a>
+      </div>
+
+      <div class="card" aria-live="polite">
+        <div class="title">Quick preview</div>
+
+        <div id="resultHead" class="result-head">
+          <div class="label">🎉 Congratulations! Your Eligibility is Ready.
+          
+          Let’s Find the Best Plan</div>
+          <img id="resultLogo" src="eligibility-logo.png" style="width:150px; height:auto;">
+        </div>
+
+        <div id="results" class="result-wrap">
+          <div class="muted">Fill details and click <strong>Calculate Eligibility</strong> to see results here.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="term-plan-example">
+      <h2 class="title">Let us understand how a Term Insurance Plan works with an example</h2>
+      <div class="subtitle">Here’s a simple example to help you understand how a term insurance plan works:</div>
+      <img src="Work.png" alt="A visual example of how a term insurance plan works, showing a timeline for a 25-year-old male named Priyam. He buys a plan with a 40-year policy term, paying a monthly premium. He unfortunately passes away at age 60, and his nominee receives ₹1 crore.">
+    </div>
+  </div>
+
+  <div id="guidelinesModal" class="modal-backdrop" style="display:none">
+    <div class="modal">
+      <button class="close-btn" onclick="closeModal()">×</button>
+      <h2 id="modalTitle"></h2>
+      <ul id="modalContent"></ul>
+    </div>
+  </div>
+
+  <div id="analyticsBackdrop" class="modal-backdrop" role="dialog" aria-hidden="true" style="display:none">
+    <div class="modal" role="document" style="max-width:720px">
+      <h2>Quotation Click Analytics</h2>
+      <div id="analyticsContent" style="margin-top:18px;max-height:400px;overflow-y:auto"></div>
+      <div style="margin-top:20px;display:flex;gap:12px;justify-content:space-between;align-items:center">
+        <a id="clearAnalytics" class="cta btn-download" href="#">Clear History</a>
+        <a id="analyticsClose" class="cta" href="#" style="background:linear-gradient(90deg,#6b7280,#374151)">Close</a>
+      </div>
+    </div>
+  </div>
+
+  <button id="analyticsBtn"
+    style="position:fixed;bottom:20px;right:20px;z-index:70;background:linear-gradient(90deg,#111827,#000);color:#fff;border:none;padding:12px 18px;border-radius:50px;font-weight:900;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.2)">
+    📊 View Clicks
+  </button>
+
+<script>
+/* --------- State + helpers --------- */
+const btnSalaried=document.getElementById('btnSalaried');
+const btnSelf=document.getElementById('btnSelf');
+const salariedBlock=document.getElementById('salariedBlock');
+const selfBlock=document.getElementById('selfBlock');
+const checkBtn=document.getElementById('checkBtn');
+const resultHead=document.getElementById('resultHead');
+let employment='salaried';
+
+btnSalaried.onclick=()=>{employment='salaried';btnSalaried.classList.add('active');btnSelf.classList.remove('active');salariedBlock.style.display='block';selfBlock.style.display='none';updateChips();};
+btnSelf.onclick=()=>{employment='self';btnSelf.classList.add('active');btnSalaried.classList.remove('active');salariedBlock.style.display='none';selfBlock.style.display='block';updateChips();};
+
+function calcAgeFromDOB(d){ if(!d)return null; const b=new Date(d); if(isNaN(b)) return null; const t=new Date(); let y=t.getFullYear()-b.getFullYear(); const m=t.getMonth()-b.getMonth(); if(m<0||(m===0&&t.getDate()<b.getDate())) y--; return y; }
+function incomeMultipleByAge(a){ if(!a) return 0; if(a>=18&&a<=30) return 35; if(a<=35) return 30; if(a<=40) return 25; if(a<=45) return 20; if(a<=50) return 15; if(a<=55) return 10; if(a<=60) return 5; return 0; }
+function fmtINR(n){ return new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR',maximumFractionDigits:0}).format(Math.round(Number(n)||0)); }
+
+/* --- Education normalization (Diploma equivalence rules) --- */
+function normalizeEducationToBand(opt){
+  // Returns one of: "below10" | "10th" | "12th" | "graduate" | "postgrad"
+  switch(opt){
+    case "Below 10th": return "below10";
+    case "10th": return "10th";
+    case "12th (HSC)Passed": return "12th";
+    case "Diploma (10th+2/3yr)": return "10th";       // Equivalent to 10th Pass
+    case "Diploma (12th+2yr)": return "12th";          // Equivalent to 12th Pass
+    case "Diploma (12th+3/4yr)": return "graduate";    // Equivalent to Graduate
+    case "Graduate": return "graduate";
+    case "Post Graduate": return "postgrad";
+    default: return "";
+  }
+}
+function bandAtLeast(band, min){
+  const order={"below10":0,"10th":1,"12th":2,"graduate":3,"postgrad":4};
+  return (order[band]??-1) >= (order[min]??99);
+}
+
+['dob','ageManual','se1','se2','se3','annualIncome','existing','education'].forEach(id=>{
+  const el=document.getElementById(id); if(el) el.addEventListener('input', updateChips);
+});
+
+function updateChips(){
+  const manualAge=document.getElementById('ageManual').value?Number(document.getElementById('ageManual').value):null;
+  const dobAge=calcAgeFromDOB(document.getElementById('dob').value);
+  const age=manualAge||dobAge||null;
+  document.getElementById('ageOut').textContent=age?age+" years":"-";
+  const mult=incomeMultipleByAge(age);
+  document.getElementById('multOut').textContent=mult?mult+"x":"-";
+
+  const n1=Number(document.getElementById('se1').value)||0;
+  const n2=Number(document.getElementById('se2').value)||0;
+  const n3=Number(document.getElementById('se3').value)||0;
+  const avg=Math.round((n1+n2+n3)/3);
+  document.getElementById('seAvg').textContent=fmtINR(avg);
+
+  const eff=employment==='salaried'?(Number(document.getElementById('annualIncome').value)||0):avg;
+  document.getElementById('effOut').textContent=fmtINR(eff);
+  
+  // Update previews for income and existing cover
+  document.getElementById('annualIncomePreview').textContent = fmtINR(document.getElementById('annualIncome').value);
+  document.getElementById('existingPreview').textContent = fmtINR(document.getElementById('existing').value);
+}
+
+/* ---- Plan Guidelines Data ---- */
+const planGuidelines = {
+  "i-Protect Smart Plus": `
+    <li><strong>For Salaried Persons:</strong>
+      <ul>
+        <li>Income between ₹3 Lakh – ₹4.99 Lakh → Maximum Sum Assured capped at ₹50 Lakh only.</li>
+        <li>Income ₹5 Lakh & above → Sum Assured as per Income Multiplier Grid (no cap).</li>
+      </ul>
+    </li>
+    <li><strong>For Non-Salaried (Self-Employed / Business):</strong>
+      <ul>
+        <li>Minimum income of ₹5 Lakh is mandatory.</li>
+        <li>If income is ₹5 Lakh or above → Sum Assured as per Income Multiplier Grid.</li>
+      </ul>
+    </li>
+    <li><strong>Key Rule:</strong> Salaried clients become eligible starting from ₹3 Lakh income, but cover is capped at ₹50 Lakh until income reaches ₹5 Lakh. Non-salaried clients must have a minimum ₹5 Lakh income to qualify under the grid.</li>
+  `,
+  "i-Protect Super": `
+    <li><strong>Minimum Income Requirement:</strong> Annual income must be ₹3 Lakh or above.</li>
+    <li><strong>Sum Assured (Life Cover) Rules:</strong>
+      <ul>
+        <li>Minimum Sum Assured: ₹50 Lakh.</li>
+        <li>Maximum Sum Assured: ₹2 Crore.</li>
+      </ul>
+    </li>
+    <li><strong>Other Criteria:</strong>
+      <ul>
+        <li>Income Multiplier Grid is not applicable.</li>
+        <li>Minimum Education Qualification: 12th Pass (HSC) is mandatory.</li>
+      </ul>
+    </li>
+    <li><strong>Key Rule:</strong> This plan has simple eligibility rules with a fixed life cover range. No grid calculation is required.</li>
+  `,
+  "Saral Jeevan Bima": `
+    <li><strong>Minimum Income Requirement:</strong> Annual income must be ₹2.5 Lakh or above.</li>
+    <li><strong>Sum Assured (Life Cover) Rules:</strong>
+      <ul>
+        <li>Minimum Sum Assured: ₹5 Lakh.</li>
+        <li>Maximum Sum Assured: ₹49.99 Lakh.</li>
+      </ul>
+    </li>
+    <li><strong>Other Criteria:</strong>
+      <ul>
+        <li>Education Requirement: 10th pass and below are also acceptable.</li>
+      </ul>
+    </li>
+    <li><strong>Key Rule:</strong> This is an IRDAI-standardized term plan with simple and uniform features.</li>
+  `,
+  "i-Protect – Return of Premium": `
+    <li><strong>Minimum Education Requirement:</strong> 12th Pass and above.</li>
+    <li><strong>Rules:</strong>
+      <ul>
+        <li><strong>Salaried with Non-Graduate:</strong>
+          <br>
+          - Income ₹3 Lakh – ₹9.99 Lakh → Maximum Sum Assured capped at ₹50 Lakh.
+          <br>
+          - Income ₹10 Lakh & above → Sum Assured as per Financial Eligibility Grid.
+        </li>
+        <li><strong>Salaried with Graduate:</strong>
+          <br>
+          - Income ₹5 Lakh & above → Sum Assured as per Financial Eligibility Grid.
+        </li>
+        <li><strong>Non-Salaried (Graduate + Self-Employed):</strong>
+          <br>
+          - Income ₹5 Lakh & above → Sum Assured as per Financial Eligibility Grid.
+        </li>
+      </ul>
+    </li>
+    <li><strong>Special Conditions:</strong>
+      <ul>
+        <li>For Smoker Clients: Minimum Sum Assured must be ₹50 Lakh. Coverage below ₹50 Lakh is not allowed.</li>
+        <li>Non-Graduates with income below ₹10 Lakh will always be capped at ₹50 Lakh, even if their income is between ₹7-9 Lakh.</li>
+      </ul>
+    </li>
+    <li><strong>Key Rule:</strong> Graduates have easier access to grid eligibility at ₹5 Lakh income. Non-graduates face stricter caps unless their income is ≥ ₹10 Lakh.</li>
+  `,
+  "General Notes": `
+    <li>Minimum entry age: 18 years.</li>
+    <li>Final eligibility is subject to the insurer's full underwriting process.</li>
+    <li>All links provided open the official ICICI Prudential Life Insurance quotation pages.</li>
+  `
+};
+
+/* --- Modal Logic --- */
+function showModal(planName){
+  document.getElementById('modalTitle').textContent = planName + ' - Guidelines';
+  document.getElementById('modalContent').innerHTML = planGuidelines[planName] + planGuidelines["General Notes"];
+  document.getElementById('guidelinesModal').style.display = 'flex';
+}
+function closeModal(){
+  document.getElementById('guidelinesModal').style.display = 'none';
+}
+
+
+/* ---- Product plans + brochure & logo mapping ---- */
+const plans=[
+  // iProtect Smart Plus
+  { name:"i-Protect Smart Plus", minAge:18, maxAge:60,
+    minEduBand:"12th",
+    incomeRule:(emp,eduBand,inc)=>{
+      if(inc<300000) return false;
+      if(inc>=300000 && inc<500000) return "cap50L";
+      if(inc>=500000) return true;
+      return false;
+    },
+    minCover:5000000,
+    maxCover:Infinity,
+    quotation:"https://buy.iciciprulife.com/buy/EBI.htm?execution=e1s1#/LAEBI/T75"
+  },
+
+  // iProtect Super (Eligibility rules: Annual income must be ₹3 Lakh or above, min SA 50L, max SA 2Cr, 12th Pass mandatory)
+  { name:"i-Protect Super", minAge:18, maxAge:55,
+    minEduBand:"12th",
+    useGrid: false,
+    incomeRule:(emp,eduBand,inc)=> inc>=300000,
+    minCover:5000000,
+    maxCover:20000000,
+    quotation:"https://buy.iciciprulife.com/buy/EBI.htm?execution=e1s1#/LAEBI/T72"
+  },
+
+  // Saral Jeevan Bima
+  { name:"Saral Jeevan Bima", minAge:18, maxAge:65,
+    minEduBand:"below10",
+    useGrid: true,
+    incomeRule:(emp,eduBand,inc)=> inc>=250000,
+    minCover:500000, maxCover:4999999,
+    quotation:"https://buy.iciciprulife.com/buy/EBI.htm?execution=e1s1#/LAEBI/T58"
+  },
+
+  // iProtect – Return of Premium (ROP) (Eligibility rules based on new criteria)
+  { name:"i-Protect – Return of Premium", minAge:18, maxAge:60,
+    minEduBand:"12th",
+    incomeRule:(emp,eduBand,inc,smoker)=>{
+      if(inc < 300000) return false;
+
+      const isGraduate = (eduBand === "graduate" || eduBand === "postgrad");
+
+      if(inc >= 300000 && inc < 500000) return "cap50L";
+
+      if(isGraduate && inc >= 500000) return true;
+
+      if(!isGraduate && inc >= 1000000) return true;
+
+      return false;
+    },
+    minCover:250000,
+    maxCover:Infinity,
+    specialSmokerOK:(smoker,finalCover)=> !smoker || finalCover>=5000000,
+    quotation:"https://buy.iciciprulife.com/buy/EBI.htm?execution=e1s1#/LAEBI/T75"
+  }
+];
+
+const brochuresMap={
+  "i-Protect Smart Plus":{ pdf:"iProtect-Smart.pdf",          logo:"iprotect-smart-logo.png" },
+  "i-Protect Super":      { pdf:"Protect-Super-Brochure.pdf",  logo:"iprotect-super-logo.png" },
+  "Saral Jeevan Bima":    { pdf:"Saral-Jeevan-Bima.pdf",       logo:"saral-jeevan-logo.png" },
+  "i-Protect – Return of Premium": { pdf:"iProtect-ROP.pdf", logo:"iprotect-rop-logo.png" }
+};
+
+/* ---- Tracking ---- */
+function trackQuotationClick(planName, quotationUrl){
+  const time=new Date().toISOString();
+  const record={plan:planName, url:quotationUrl, clickedAt:time};
+  const history=JSON.parse(localStorage.getItem("quotationClicks")||"[]");
+  history.push(record);
+  localStorage.setItem("quotationClicks", JSON.stringify(history));
+  console.log("📊 Quotation Click:", record);
+}
+
+/* ---- Card template (with Download Brochure button) ---- */
+function buildPlanCard(p, coverShown, index){
+  const b=brochuresMap[p.name] || {pdf:'#', logo:'eligibility-logo.png'};
+  
+  let coverText;
+  if(p.name==="i-Protect Super"){
+    coverText=`Minimum ${fmtINR(5000000)}, Maximum ${fmtINR(20000000)}`;
+  } else if (p.name==="i-Protect – Return of Premium" && coverShown === 5000000){
+    coverText=`Maximum ${fmtINR(coverShown)}`;
+  }
+  else {
+    coverText=fmtINR(coverShown);
+  }
+
+  return `
+  <div class="plan-card">
+    <div class="plan-head">
+      <img src="${b.logo}" alt="${p.name} logo" loading="lazy">
+      <div>
+        <h3 style="margin:0;font-size:17px;font-weight:900">${p.name}</h3>
+        <div style="font-size:12px;color:#5b6470">ICICI Prudential Term Insurance</div>
+      </div>
+    </div>
+
+    <div style="font-size:13px;color:#5b6470;margin-top:2px">Eligible Life Cover</div>
+    <div class="plan-amount">${coverText}</div>
+
+    <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:10px">
+      <a class="cta btn-quote"
+        href="${p.quotation}" target="_blank" rel="noopener"
+        onclick="trackQuotationClick('${p.name}','${p.quotation}')"
+        style="flex:1;min-width:140px;text-align:center">
+        Get Quotation
+      </a>
+      <a class="cta btn-download" href="${b.pdf}" download
+        style="flex:1;min-width:140px;text-align:center">
+        Download Brochure
+      </a>
+      <a class="cta btn-download-small" href="#" onclick="showModal('${p.name}')"
+        style="flex:1;min-width:140px;text-align:center">
+        Know More
+      </a>
+    </div>
+  </div>`;
+}
+
+/* ---- Calculate + Render (NO POPUP) ---- */
+checkBtn.onclick=function(e){
+  e.preventDefault();
+  const manualAge=document.getElementById('ageManual').value?Number(document.getElementById('ageManual').value):null;
+  const dobAge=calcAgeFromDOB(document.getElementById('dob').value);
+  const age=manualAge||dobAge||null;
+
+  const eduOpt=document.getElementById('education').value;
+  const eduBand=normalizeEducationToBand(eduOpt);
+
+  const smokerSel=(document.getElementById('smoker').value||'No').toLowerCase() === 'yes';
+
+  const n1=Number(document.getElementById('se1').value)||0;
+  const n2=Number(document.getElementById('se2').value)||0;
+  const n3=Number(document.getElementById('se3').value)||0;
+  const avg=Math.round((n1+n2+n3)/3);
+
+  const eff=employment==='salaried'?(Number(document.getElementById('annualIncome').value)||0):avg;
+  const mult=incomeMultipleByAge(age);
+  const existing=Number(document.getElementById('existing').value)||0;
+  const before=eff*mult;
+  const eligibleAmount=Math.max(0, before-existing);
+
+  const resultsDiv=document.getElementById('results');
+  resultsDiv.innerHTML='';
+
+  if(!age || !eduBand || mult===0 || !bandAtLeast(eduBand,"below10")){
+    const msg=`<div class="badge-bad">Please fill Age and Education correctly (age must be within 18–65).</div>`;
+    resultsDiv.innerHTML=msg;
+    resultHead.style.display='none';
+    return;
+  }
+  
+  if(eff < 250000){
+    const msg=`<div class="badge-bad">Annual income must be at least ₹2,50,000 for any plan.</div>`;
+    resultsDiv.innerHTML=msg;
+    resultHead.style.display='none';
+    return;
+  }
+  
+  // NEW UNIVERSAL RULE: Existing cover exceeds maximum allowed cover
+  if(existing > (eff * mult)){
+    const msg = `<div class="badge-bad">Your existing life insurance coverage exceeds the maximum allowed cover as per your current income and eligibility. Hence, you are not eligible for a new Term Plan at this time.</div>`;
+    resultsDiv.innerHTML = msg;
+    resultHead.style.display = 'none';
+    return;
+  }
+
+  resultHead.style.display='flex';
+
+  const matched=[];
+  plans.forEach(p=>{
+    if(age<p.minAge||age>p.maxAge) return;
+    if(!bandAtLeast(eduBand, p.minEduBand)) return;
+
+    const ruleRes = p.incomeRule(employment,eduBand,eff,smokerSel);
+    
+    if(!ruleRes) return;
+
+    let coverToUse;
+    if(p.name === "i-Protect Super"){
+        coverToUse = p.minCover;
+    }
+    else if(ruleRes === "cap50L"){
+      coverToUse = Math.min(eligibleAmount, 5000000);
+    } else {
+      coverToUse = eligibleAmount;
+    }
+
+    let finalCover = Math.max(coverToUse - existing, p.minCover);
+    
+    finalCover = Math.min(finalCover, p.maxCover);
+
+    if(p.name.includes("Return of Premium") && typeof p.specialSmokerOK === "function"){
+      if(!p.specialSmokerOK(smokerSel, finalCover)) return;
+      // NEW ROP NON-SMOKER MINIMUM RULE
+      if(!smokerSel && finalCover < 2500000) return;
+    }
+
+    if(finalCover < p.minCover) return;
+    if(finalCover <= 0) return;
+    
+    if (p.name === "i-Protect – Return of Premium") {
+        if (ruleRes === "cap50L" && finalCover > 5000000) return;
+    }
+
+    matched.push({plan:p, cover:finalCover});
+  });
+
+  if(matched.length===0){
+    const msg=`<div class="badge-bad">Not eligible for any plan based on the provided details.</div>`;
+    resultsDiv.innerHTML=msg;
+  }else{
+    matched.forEach((m,idx)=>{
+      const card=buildPlanCard(m.plan, m.cover, idx);
+      resultsDiv.insertAdjacentHTML('beforeend', card);
+    });
+  }
+};
+
+/* ---- Analytics viewer ---- */
+const analyticsBtn=document.getElementById('analyticsBtn');
+analyticsBtn.addEventListener('click', ()=>{
+  renderAnalytics();
+  const el=document.getElementById('analyticsBackdrop');
+  el.style.display='flex'; el.setAttribute('aria-hidden','false');
+});
+document.getElementById('analyticsClose').addEventListener('click', e=>{
+  e.preventDefault(); document.getElementById('analyticsBackdrop').style.display='none';
+});
+document.getElementById('analyticsBackdrop').addEventListener('click', ev=>{
+  if(ev.target===ev.currentTarget){ev.currentTarget.style.display='none';}
+});
+document.getElementById('clearAnalytics').addEventListener('click', e=>{
+  e.preventDefault();
+  localStorage.removeItem('quotationClicks');
+  renderAnalytics();
+});
+
+function renderAnalytics(){
+  const history=JSON.parse(localStorage.getItem('quotationClicks')||'[]');
+  const container=document.getElementById('analyticsContent');
+  if(history.length===0){
+    container.innerHTML=`<div class="badge-bad">No clicks tracked yet.</div>`;
+    return;
+  }
+  let html=`<table style="width:100%;border-collapse:collapse;font-size:14px">
+    <thead>
+      <tr style="background:#f4f6f9;text-align:left">
+        <th style="padding:8px;border-bottom:1px solid #ddd">Plan</th>
+        <th style="padding:8px;border-bottom:1px solid #ddd">Link</th>
+        <th style="padding:8px;border-bottom:1px solid #ddd">Time</th>
+      </tr>
+    </thead><tbody>`;
+  history.forEach(h=>{
+    html+=`<tr>
+      <td style="padding:8px;border-bottom:1px solid #eee;font-weight:600">${h.plan}</td>
+      <td style="padding:8px;border-bottom:1px solid #eee"><a href="${h.url}" target="_blank" style="color:#ff6a3d;font-weight:700">Open</a></td>
+      <td style="padding:8px;border-bottom:1px solid #eee;color:#555">${new Date(h.clickedAt).toLocaleString()}</td>
+    </tr>`;
+  });
+  html+=`</tbody></table>`;
+  container.innerHTML=html;
+}
+
+/* init */
+updateChips();
+</script>
+</body>
+</html>
